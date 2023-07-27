@@ -1,0 +1,32 @@
+{
+	"folders": [
+		{
+			"path": "."
+		}
+	],
+	"settings": {
+		"[python]": {
+			"editor.defaultFormatter": "ms-python.black-formatter"
+		},
+		"python.formatting.provider": "none"
+	},
+	"launch": {
+		"configurations": [
+			{
+				"type": "aws-sam",
+				"request": "direct-invoke",
+				"name": "makePayment-dev:index.handler (python3.8)",
+				"invokeTarget": {
+					"target": "code",
+					"projectRoot": "/Users/nick/github/fantasy/makePayment-dev",
+					"lambdaHandler": "index.handler"
+				},
+				"lambda": {
+					"runtime": "python3.8",
+					"payload": {},
+					"environmentVariables": {}
+				}
+			}
+		]
+	}
+}
