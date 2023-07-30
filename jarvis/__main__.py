@@ -40,10 +40,10 @@ parser.add_argument(
 )
 # This argument lets the user input a file path for a setup script
 parser.add_argument(
-    "--script_path",
+    "--script",
     type=str,
     help="The path to the setup script",
-    default="utils/Setup.sh",
+    default="utils/LatentBlending.sh",
 )
 
 args = parser.parse_args()
@@ -55,11 +55,22 @@ jarvisclient.token = os.environ.get(f"JARVISLABS_API_KEY")
 jarvisclient.user_id = os.environ.get(f"JARVISLABS_USER")
 
 if __name__ == "__main__":
-    for script in User.get_script()["script_meta"]:
-        if script["script_name"] == args.script_path:
-            print("Script already exists!")
+    print(f"{User.get_script()}")
+    script_id = ""
+    if User.get_script()["success"] != False:
+        for script in User.get_script()["script_meta"]:
+            if script["script_name"] == args.script:
+                script_id = script["script_id"]
+                print("Script already exists!")
+                break
+    else:
+        print("Creating script...")
+        script_id = User.add_script(
+            script_path=args.script,
+            script_name=args.script.split("utils/")[1].split(".sh")[0],
+        )
 
-    print(f"{User.get_script()['script_meta'][0]}")
+    # print(f"{User.get_script()['script_meta'][0]}")
     # Lists instances
     instances = User.get_instances()
     for instance in instances:
@@ -91,7 +102,7 @@ if __name__ == "__main__":
         num_gpus=args.num_gpus,
         hdd=args.hdd,
         name=args.name,
-        script_id=script_id["script_id"],
+        script_id=script_id,
         is_reserved=args.is_reserved,
     )
     # AI END
